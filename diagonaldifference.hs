@@ -1,4 +1,9 @@
-agr _ [] = []
-agr n x = (take n x) : (agr n (drop n x))
+group _ [] = []
+group n x = (take n x) : (group n (drop n x))
 
-main = interact $ show . (\x -> (\z -> abs (sum ( zipWith (!!) (tail z) [0..head $ head z]) - sum ( zipWith (!!) (tail z) (reverse [0..(head $ head z) -1])))) ((\y -> ([head y]) : agr (head y) (tail y)) ((map read $ words x)::[Int])))
+parse = (map read . words)::(String -> [Int])
+construct y = ([head y]) : group (head y) (tail y)
+prinSum z = zipWith (!!) (tail z) [0..(head $ head z) -1]
+secSum z = zipWith (!!) (tail z) (reverse [0..(head $ head z) -1])
+
+main = interact $ show . (\z -> abs $ sum (prinSum z) - sum (secSum z)) . construct . parse
